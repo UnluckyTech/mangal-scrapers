@@ -38,10 +38,21 @@ function SearchManga(query)
 
     local mangas = {}
 
-    for i, v in ipairs(Page:elements(".bsx > a")) do
-        local manga = { url = v:attribute('href'), name = v:attribute('title') }
-        mangas[i + 1] = manga
-    end
+    repeat
+        for i, v in ipairs(Page:elements(".bsx > a")) do
+            local manga = { url = v:attribute('href'), name = v:attribute('title') }
+            table.insert(mangas, manga)
+        end
+
+        -- Navigate to the next page if available
+        local nextPageBtn = Page:element('.pagination .next')
+        if nextPageBtn and nextPageBtn:is_enabled() then
+            nextPageBtn:click()
+            Time.sleep(Delay)
+        else
+            break  -- Exit the loop if there is no next page
+        end
+    until false
 
     return mangas
 end
